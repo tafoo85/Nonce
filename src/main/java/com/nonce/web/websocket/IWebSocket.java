@@ -1,8 +1,10 @@
 package com.nonce.web.websocket;
 
+import com.nonce.web.websocket.framing.IFrame;
+
 public interface IWebSocket {
-    void send(String message);
-    void onMessage(String message);
+    void send(IFrame message);
+    void onMessage(IFrame message);
     void onDisconnect();
     void onOpen();
 }

@@ -3,6 +3,8 @@ package com.nonce.web.websocket;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 
+import com.nonce.web.websocket.framing.IFrame;
+
 public class FrameWebSocket implements IWebSocket {
     private ServletInputStream _inputStream;
     private ServletOutputStream _outputStream;
@@ -21,24 +23,23 @@ public class FrameWebSocket implements IWebSocket {
     }
 
     @Override
-    public void send(String message) {
-        // TODO Auto-generated method stub
+    public void send(IFrame frame) {
         
     }
 
     @Override
-    public void onMessage(String message) {
-        // TODO Auto-generated method stub
+    public void onMessage(IFrame frame) {
         
     }
 
     @Override
     public void onDisconnect() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void onOpen() { this._currentState = ConnectionState.Open; }
+    public void onOpen() { 
+        this._currentState = ConnectionState.Open; 
+    }
 
 }

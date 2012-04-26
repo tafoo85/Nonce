@@ -25,12 +25,12 @@ public class FrameHeader implements IFrameHeader {
 
     @Override
     public boolean getSecondReservedBit() {
-        return (_header & FIRST_RESERVED_BIT_MASK >> 1) == 1;
+        return (_header & SECOND_RESERVED_BIT_MASK) == 1;
     }
 
     @Override
     public boolean gettThirdReservedBit() {
-        return (_header & FIRST_RESERVED_BIT_MASK >> 2) == 1;
+        return (_header & THIRD_RESERVED_BIT_MASK) == 1;
     }
 
     @Override
