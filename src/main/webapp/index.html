@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+			var websocket = undefined;	
+			function create() {
+				var wsUri = "ws://localhost/Nonce/ws"
+				websocket = new WebSocket(wsUri);
+				
+				websocket.onopen = function(event) {
+					alert('opened');
+				}
+			
+				websocket.onclose = function(event) {
+					alert('closed');
+				}
+			
+				websocket.onmessage = function(event) {
+					alert('message');
+				}
+			
+				websocket.onerror = function(event) {
+					alert('error');
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="javascript:create()">Create Socket</button>
+	</body>
+</html>
