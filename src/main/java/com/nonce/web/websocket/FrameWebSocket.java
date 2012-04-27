@@ -3,7 +3,7 @@ package com.nonce.web.websocket;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 
-import com.nonce.web.websocket.framing.IFrame;
+import com.nonce.web.websocket.io.framing.IFrame;
 
 public class FrameWebSocket implements IWebSocket {
     private ServletInputStream _inputStream;
@@ -24,7 +24,7 @@ public class FrameWebSocket implements IWebSocket {
 
     @Override
     public void send(IFrame frame) {
-        
+       
     }
 
     @Override

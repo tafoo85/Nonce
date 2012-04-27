@@ -1,6 +1,6 @@
 package com.nonce.web.websocket;
 
-import com.nonce.web.websocket.framing.IFrame;
+import com.nonce.web.websocket.io.framing.IFrame;
 
 public interface IWebSocket {
     void send(IFrame message);
