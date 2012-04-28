@@ -147,18 +147,18 @@ public class FrameHeader implements IFrameHeader {
 
     @Override
     public void setPayloadLength(long payloadLength) {
-    	if (payloadLength < 126) { //7-bit payload length
-			_payloadLengthMask = 0x007F0000;
-			_payloadLengthOffset = 20; 
-		} else if (payloadLength == 126) {
-			_payloadLengthMask = 0x0000FFFF;
-			_payloadLengthOffset = 12;
-		} else { 
-			_payloadLengthMask = 0x007F0000;
-			_payloadLengthOffset = 20;
-			this._extendedHeader = payloadLength;
-			payloadLength = 0x7F;
-		}
+        //first check where to pack the length.
+        //then change the seven bits to the appropriate value
+        //if seven bits == 126 then pack the length in the two low order bytes of header
+        //if seven bits == 127 then length should be 64 bits, so just set it to the extended header
+        
+        if (payloadLength < 126) {
+            _header ^= (int) ((payloadLength << _payloadLengthOffset) & _payloadLengthMask);
+        } else if ( (payloadLength & 0xFFFFFFFFFFFF0000l) != 0 ) { //need to pack it into the 64bit part of the header
+            
+        } else { //it's a 16bit header
+            
+        }
 		_header ^= (int) ((payloadLength << _payloadLengthOffset) & _payloadLengthMask);
     }
     

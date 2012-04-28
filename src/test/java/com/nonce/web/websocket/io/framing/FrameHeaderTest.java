@@ -97,16 +97,34 @@ public class FrameHeaderTest {
 	
 	@Test
 	public void testFrameWith7BitLength() {
-		
+		IFrameHeader header = new FrameHeader(10, 0, 1, OpCode.BINARY_FRAME, 50000);
+		long length = header.getPayloadLength();
+		try {
+		    Assert.assertTrue(length == 10);
+		} catch (AssertionFailedError e) {
+		    Assert.fail(e.getMessage());
+		}
 	}
 	
 	@Test
 	public void testFrameWith16BitLength() {
-		
+	    IFrameHeader header = new FrameHeader(1000, 0, 1, OpCode.BINARY_FRAME, 50000);
+	    long length = header.getPayloadLength();
+        try {
+            Assert.assertTrue(length == 1000);
+        } catch (AssertionFailedError e) {
+            Assert.fail(e.getMessage());
+        }
 	}
 	
 	@Test
 	public void testFrameWith64BitLength() {
-		
+        IFrameHeader header = new FrameHeader(65537, 0, 1, OpCode.BINARY_FRAME, 50000);
+	    long length = header.getPayloadLength();
+        try {
+            Assert.assertTrue(length == 65537);
+        } catch (AssertionFailedError e) {
+            Assert.fail(e.getMessage());
+        }
 	}	
 }
