@@ -152,11 +152,11 @@ public class FrameHeader implements IFrameHeader {
         //if seven bits == 126 then pack the length in the two low order bytes of header
         //if seven bits == 127 then length should be 64 bits, so just set it to the extended header
         
-        if (payloadLength < 126) {
+        if (payloadLength < 126) { //seven bits needed, just pack it into payloadlength of header
             _header ^= (int) ((payloadLength << _payloadLengthOffset) & _payloadLengthMask);
-        } else if ( (payloadLength & 0xFFFFFFFFFFFF0000l) != 0 ) { //need to pack it into the 64bit part of the header
+        } else if ( (payloadLength & 0xFFFFFFFFFFFF0000l) != 0 ) { //64bit value needed, so set seven bits in payload length to 127 and set the extended heaader = to the length
             
-        } else { //it's a 16bit header
+        } else { //it's a 16bit header, so set the seven bits for payload length in header to 126 and fill the low order bytes in header with payloadLength
             
         }
 		_header ^= (int) ((payloadLength << _payloadLengthOffset) & _payloadLengthMask);
