@@ -1,9 +1,12 @@
 package com.nonce.web.websocket.io.framing;
 
 public class FrameHeader implements IFrameHeader {
-	protected int _header; //32 byte header.
-    protected long _extendedHeader; //sometimes (if header & payload_mask > 127) we have a 64bit payload length.
+	protected int _header; //32 bit header.
+    protected int _midPayloadBytes; //sometimes (if header & payload_mask > 127) we have a 64bit payload length.
+    protected short _leastSignificantPayloadBytes;
+    
     protected int _maskingKey; //sometimes (if header & masked_mask == 1) we have a masked payload.
+    
     protected int _payloadLengthMask; //tenth - sixteenth bit or seventeenth - thirty-second bit
     protected int _payloadLengthOffset;
     
@@ -13,6 +16,8 @@ public class FrameHeader implements IFrameHeader {
     protected static final int THIRD_RESERVED_BIT_MASK = 0x10000000; //fourth bit 
     protected static final int OPCODE_MASK = 0x0F000000; //fifth - eighth bit
     protected static final int MASKED_MASK = 0x00800000; //ninth bit
+    protected static final int PAYLOAD_LENGTH_MASK = 0x007F0000; //tenth - sixteenth bit.
+    protected static final int EXTENDED_PAYLOAD_LENGTH_MASK = 0x0000FFFF;
         
     protected static final int FINAL_OFFSET = 31;
     protected static final int FIRST_RESERVED_BIT_OFFSET = 30;
@@ -20,6 +25,8 @@ public class FrameHeader implements IFrameHeader {
     protected static final int THIRD_RESERVED_BIT_OFFSET = 28;
     protected static final int OPCODE_OFFSET = 24;
     protected static final int MASKED_OFFSET = 23;
+    protected static final int PAYLOAD_LENGTH_OFFSET = 16;
+    protected static final int EXTENDED_PAYLOAD_LENGTH_OFFSET = 0;
     
     protected enum OpCode {
     	CONTINUATION_FRAME((short)0x0),
@@ -96,10 +103,15 @@ public class FrameHeader implements IFrameHeader {
 
     @Override
     public long getPayloadLength() {
-         long payloadLength = _header & _payloadLengthMask;
+        long payloadLength = (_header & PAYLOAD_LENGTH_MASK) >>> 16;
         
-        if (payloadLength == 0x7F)
-            payloadLength = this._extendedHeader;
+        if (payloadLength == 0x7F) {
+            payloadLength = (long)((this._header & EXTENDED_PAYLOAD_LENGTH_MASK) << 48);
+            payloadLength |= (long)((this._midPayloadBytes << 16));
+            payloadLength |= (long)((this._leastSignificantPayloadBytes));
+        } else if (payloadLength == 0x7E) {
+            payloadLength = this._header & EXTENDED_PAYLOAD_LENGTH_MASK;
+        }
         
         return payloadLength;
     }
@@ -152,14 +164,19 @@ public class FrameHeader implements IFrameHeader {
         //if seven bits == 126 then pack the length in the two low order bytes of header
         //if seven bits == 127 then length should be 64 bits, so just set it to the extended header
         
+        _header ^= _header & ~PAYLOAD_LENGTH_MASK; //clear the mask
+       
         if (payloadLength < 126) {
-            _header ^= (int) ((payloadLength << _payloadLengthOffset) & _payloadLengthMask);
+            _header ^= (int) (payloadLength << PAYLOAD_LENGTH_OFFSET);
         } else if ( (payloadLength & 0xFFFFFFFFFFFF0000l) != 0 ) { //need to pack it into the 64bit part of the header
-            
+            _header ^= 0x007F0000;
+            _header ^= (payloadLength >>> 48) & EXTENDED_PAYLOAD_LENGTH_MASK;
+            _midPayloadBytes = (int)((payloadLength & 0x0000ffffffff0000L) >>> 16);
+            _leastSignificantPayloadBytes = (short)(payloadLength & 0x000000FF);
         } else { //it's a 16bit header
-            
+            _header ^= 0x007E0000;
+            _header ^= (payloadLength & EXTENDED_PAYLOAD_LENGTH_MASK);
         }
-		_header ^= (int) ((payloadLength << _payloadLengthOffset) & _payloadLengthMask);
     }
     
     @Override
