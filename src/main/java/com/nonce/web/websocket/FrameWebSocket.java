@@ -6,7 +6,9 @@ import javax.servlet.ServletOutputStream;
 import com.nonce.web.websocket.io.framing.IFrame;
 
 public class FrameWebSocket implements IWebSocket {
+    @SuppressWarnings("unused")
     private ServletInputStream _inputStream;
+    @SuppressWarnings("unused")
     private ServletOutputStream _outputStream;
     
     public enum ConnectionState {
