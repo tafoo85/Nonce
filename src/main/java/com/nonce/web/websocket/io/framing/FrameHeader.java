@@ -1,5 +1,7 @@
 package com.nonce.web.websocket.io.framing;
 
+
+
 public class FrameHeader implements IFrameHeader {
 	protected int _header; //32 bit header.
     protected int _midPayloadBytes; //sometimes (if header & payload_mask > 127) we have a 64bit payload length.
@@ -168,12 +170,12 @@ public class FrameHeader implements IFrameHeader {
        
         if (payloadLength < 126) {
             _header ^= (int) (payloadLength << PAYLOAD_LENGTH_OFFSET);
-        } else if ( (payloadLength & 0xFFFFFFFFFFFF0000l) != 0 ) { //need to pack it into the 64bit part of the header
+        } else if ( (payloadLength & 0xFFFFFFFFFFFF0000l) != 0 ) { //64bit value needed, so set seven bits in payload length to 127 and set the extended heaader = to the length
             _header ^= 0x007F0000;
             _header ^= (payloadLength >>> 48) & EXTENDED_PAYLOAD_LENGTH_MASK;
             _midPayloadBytes = (int)((payloadLength & 0x0000ffffffff0000L) >>> 16);
             _leastSignificantPayloadBytes = (short)(payloadLength & 0x000000FF);
-        } else { //it's a 16bit header
+        } else { //it's a 16bit header, so set the seven bits for payload length in header to 126 and fill the low order bytes in header with payloadLength
             _header ^= 0x007E0000;
             _header ^= (payloadLength & EXTENDED_PAYLOAD_LENGTH_MASK);
         }
