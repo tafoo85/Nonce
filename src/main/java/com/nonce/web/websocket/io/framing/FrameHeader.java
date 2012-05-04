@@ -72,7 +72,33 @@ public class FrameHeader implements IFrameHeader {
 		this.setMaskKey(maskingKey);
 	}
 
-	@Override
+	public FrameHeader(byte[] headerBytes) {
+	    int finalFrame = headerBytes[0] & 0x80;
+	    int masked = headerBytes[1] & 0x80;
+	    OpCode code = OpCode.valueOf((short) (headerBytes[0] & 0x0F));
+	    long payloadSize = headerBytes[1] & 0x7F;
+	    long payloadLength; 
+	    if (payloadSize >= 0x7E) {
+	        
+	    }
+	    
+	    if (payloadSize == 0x7F) {
+	        
+	    }
+	    
+	    int maskingKey;// = masked == 1 ? headerBytes[]: ;
+	    
+	    this.setFinalBitValue(finalFrame);
+       // this.setPayloadLength(payloadLength);
+        this.setFirstReservedBitValue(0);
+        this.setSecondReservedBitValue(0);
+        this.setThirdReservedBitValue(0);
+        this.setMaskedBitValue(masked);
+        this.setOpCode(code);
+        //this.setMaskKey(maskingKey);
+    }
+
+    @Override
     public int getFinalBitValue() {
         return (_header & FINAL_MASK) >>> FINAL_OFFSET;
     }

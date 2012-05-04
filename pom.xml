@@ -71,6 +71,13 @@
       <artifactId>commons-codec</artifactId>
       <version>1.6</version>
     </dependency>
+    
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>  
+      <version>1.9.0</version> 
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- End Dependencies -->
@@ -384,4 +391,7 @@
   <properties>
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <scm>
+    <url>scm:git:https://tafoo85@github.com/tafoo85/Nonce.git</url>
+  </scm>
 </project>

@@ -9,8 +9,12 @@ public class BinaryFrame extends Frame {
 		super(data, finalFrame, isMasked, maskingKey);
 	}
 	
-	public BinaryFrame(byte[] data, boolean finalFrame) { //for the serialization of onto the wire.
+	public BinaryFrame(byte[] data, boolean finalFrame) { //for the serialization onto the wire.
 		super(data, finalFrame, false, 0);
+	}
+	
+	public BinaryFrame(IFrameHeader header, byte[] data) {
+	    super(header, data);
 	}
 
 	@Override
@@ -21,4 +25,9 @@ public class BinaryFrame extends Frame {
 		
 		this._header = new FrameHeader(this._payload.length, finalBit, maskedBit, opCode, maskingKey);
 	}
+
+    @Override
+    protected void initializeHeader(IFrameHeader header) {
+        this._header = header;
+    }
 }

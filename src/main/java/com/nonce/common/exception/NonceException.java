@@ -8,4 +8,8 @@ public class NonceException extends RuntimeException {
         this.initCause(inner);
         this._message = message;
     }
+    
+    public NonceException(String message) {
+        this._message = message;
+    }
 }

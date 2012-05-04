@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nonce.web.websocket.FrameWebSocket;
+import com.nonce.web.websocket.BinaryMessageWebSocket;
 import com.nonce.web.websocket.IWebSocket;
 
 public class FrameWebSocketServer extends WebSocketServer {
@@ -35,7 +35,7 @@ public class FrameWebSocketServer extends WebSocketServer {
             HttpServletResponse response) {
         logger.debug("Handshake Success.");
         try {
-            this._client = new FrameWebSocket(request.getInputStream(), response.getOutputStream());
+            this._client = new BinaryMessageWebSocket(request.getInputStream(), response.getOutputStream());
             this._client.onOpen();
         } catch(IOException e) {
             logger.error("Failed to create the websocket.");
